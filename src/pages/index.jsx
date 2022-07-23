@@ -1,5 +1,6 @@
 import { showNotification } from "@mantine/notifications";
 import React, { useState, useEffect } from "react";
+import { Loader } from "@mantine/core";
 import axios from "axios";
 
 import Layout from "../components/Layout";
@@ -35,7 +36,6 @@ export default function App() {
       .then((res) => {
         const { data } = res.data;
         setDatas(data);
-        console.log(data);
       })
       .catch((err) => {})
       .finally(() => setIsReady(false));
@@ -108,19 +108,30 @@ export default function App() {
             />
             <CustomButton
               id="btn-login"
-              label="Login"
+              label="Submit"
               loading={loading || disabled}
             />
           </form>
         </div>
-        <div className="flex flex-col p-8 mb-5 rounded-3xl min-w-[60%] bg-white shadow-lg shadow-black border border-neutral-600">
-          <h2 className="text-center">Balance History</h2>
-          {datas.map((data) => (
-            <div key={data.id}>
-              <p>{data.notes}</p>
-              <p>Rp. {format(data.amount)}</p>
-            </div>
-          ))}
+        <div className="flex flex-col items-center p-8 mb-5 rounded-3xl min-w-[60%] bg-white shadow-lg shadow-black border border-neutral-600 gap-2">
+          <h2 className="text-center font-bold text-3xl underline">
+            Balance History
+          </h2>
+          {isReady ? (
+            <Loader color="gray" />
+          ) : (
+            datas.map((data) => (
+              <div
+                className="w-full flex justify-between border-b pb-2"
+                key={data.id}
+              >
+                <p className="text-lg font-medium">{data.notes}</p>
+                <p className="text-white bg-green-500 rounded-full p-2 font-light">
+                  Rp. {format(data.amount)}
+                </p>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </Layout>

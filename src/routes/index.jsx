@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { NotificationsProvider } from "@mantine/notifications";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,6 +8,7 @@ import axios from "axios";
 import { reduxAction } from "../utils/redux/actions/action";
 import { ThemeContext } from "../utils/context";
 import Home from "../pages/";
+import Profile from "../pages/Profile";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 
@@ -30,9 +32,12 @@ export default function App() {
   useEffect(() => {
     const getData = localStorage.getItem("UserData");
     if (getData) {
-      dispatch(reduxAction("IS_LOGGED_IN", true));
+      const parseData = JSON.parse(getData);
+      dispatch(
+        reduxAction("IS_LOGGED_IN", { isLoggedIn: true, user: parseData })
+      );
     } else {
-      dispatch(reduxAction("IS_LOGGED_IN", false));
+      dispatch(reduxAction("IS_LOGGED_IN", { isLoggedIn: false, user: {} }));
     }
   }, [isLoggedIn]);
 
@@ -52,6 +57,10 @@ export default function App() {
             <Route
               path="/"
               element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/profile"
+              element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}
             />
           </Routes>
         </BrowserRouter>

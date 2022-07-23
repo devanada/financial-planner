@@ -33,13 +33,12 @@ export default function Register() {
       password,
     };
     await axios
-      .post("register", body)
+      .post("users", body)
       .then((res) => {
         const { message, data } = res.data;
         if (data) {
           navigate("/login");
         }
-        alert(message);
         showNotification({
           title: "Register Successful",
           message: message,
@@ -48,7 +47,7 @@ export default function Register() {
         });
       })
       .catch((err) => {
-        const { message } = err.response.data;
+        const { message } = err;
         showNotification({
           title: "Login Failed",
           message: message,

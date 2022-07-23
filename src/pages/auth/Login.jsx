@@ -38,7 +38,7 @@ export default function Login() {
       .then((res) => {
         const { data } = res;
         localStorage.setItem("UserData", JSON.stringify(data));
-        dispatch(reduxAction("IS_LOGGED_IN", true));
+        dispatch(reduxAction("IS_LOGGED_IN", { isLoggedIn: true, user: data }));
         showNotification({
           title: "Login Successful",
           message: "Hey there! Welcome back to Financial Planner",
