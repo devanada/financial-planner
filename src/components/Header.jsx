@@ -21,6 +21,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     localStorage.removeItem("UserData");
+    localStorage.removeItem("auth");
     dispatch(reduxAction("IS_LOGGED_IN", { isLoggedIn: false, user: {} }));
     navigate("/login");
     showNotification({

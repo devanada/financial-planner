@@ -13,7 +13,7 @@ export default function App() {
   const [disabled, setDisabled] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [notes, setNotes] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [type, setType] = useState("income");
 
   useEffect(() => {
@@ -50,28 +50,31 @@ export default function App() {
       amount,
     };
     await axios
-      .get(endpoint, body)
+      .post(endpoint, body)
       .then((res) => {
         const { message } = res.data;
         showNotification({
-          title: "Register Successful",
+          title: "Submit Successful",
           message: message,
           color: "green",
           autoClose: 3000,
         });
         setNotes("");
-        setAmount("");
+        setAmount(0);
       })
       .catch((err) => {
-        const { message } = err.response.data;
+        const { data } = err.response;
         showNotification({
-          title: "Login Failed",
-          message: message,
+          title: "Submit Failed",
+          message: data,
           color: "red",
           autoClose: 3000,
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        fetchData();
+      });
   };
 
   const format = (amount) => {
@@ -91,17 +94,19 @@ export default function App() {
             <CustomInput
               id="input-notes"
               placeholder="Notes"
+              value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
             <CustomInput
               id="input-amount"
               type="number"
               placeholder="Amount"
-              onChange={(e) => setAmount(e.target.value)}
+              value={amount}
+              onChange={(e) => setAmount(+e.target.value)}
             />
             <CustomInput
               id="input-type"
-              placeholder="Amount"
+              placeholder="Type"
               type="select"
               value={type}
               onChange={(e) => setType(e.target.value)}
@@ -123,10 +128,14 @@ export default function App() {
             datas.map((data) => (
               <div
                 className="w-full flex justify-between border-b pb-2"
-                key={data.id}
+                key={data.ID}
               >
                 <p className="text-lg font-medium">{data.notes}</p>
-                <p className="text-white bg-green-500 rounded-full p-2 font-light">
+                <p
+                  className={`text-white ${
+                    data.Segment === 0 ? `bg-green-500` : "bg-red-500"
+                  } rounded-full p-2 font-light`}
+                >
                   Rp. {format(data.amount)}
                 </p>
               </div>

@@ -35,12 +35,12 @@ export default function Register() {
     await axios
       .post("users", body)
       .then((res) => {
-        const { message, data } = res.data;
+        const { message, data, status } = res.data;
         if (data) {
           navigate("/login");
         }
         showNotification({
-          title: "Register Successful",
+          title: `Register ${status ? "Successfully" : "Failed"}`,
           message: message,
           color: "green",
           autoClose: 3000,
@@ -49,7 +49,7 @@ export default function Register() {
       .catch((err) => {
         const { message } = err;
         showNotification({
-          title: "Login Failed",
+          title: "Register Failed",
           message: message,
           color: "red",
           autoClose: 3000,
@@ -69,18 +69,21 @@ export default function Register() {
             id="inputEmail"
             type="email"
             placeholder="Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <CustomInput
             id="inputName"
             type="text"
             placeholder="Nama"
+            value={nama}
             onChange={(e) => setNama(e.target.value)}
           />
           <CustomInput
             id="inputPassword"
             type="password"
             placeholder="Password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <p className="text-black dark:text-white">

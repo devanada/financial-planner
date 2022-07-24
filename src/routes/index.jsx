@@ -12,8 +12,7 @@ import Profile from "../pages/Profile";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 
-axios.defaults.baseURL =
-  "https://virtserver.swaggerhub.com/JerryBE1709/planner/1.0.0/";
+axios.defaults.baseURL = "https://immense-spire-81553.herokuapp.com/";
 
 export default function App() {
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
@@ -32,11 +31,20 @@ export default function App() {
   useEffect(() => {
     const getData = localStorage.getItem("UserData");
     if (getData) {
+      const getAuth = JSON.parse(localStorage.getItem("auth"));
       const parseData = JSON.parse(getData);
+      axios.defaults.auth = {
+        username: getAuth.email,
+        password: getAuth.password,
+      };
       dispatch(
         reduxAction("IS_LOGGED_IN", { isLoggedIn: true, user: parseData })
       );
     } else {
+      axios.defaults.auth = {
+        username: "",
+        password: "",
+      };
       dispatch(reduxAction("IS_LOGGED_IN", { isLoggedIn: false, user: {} }));
     }
   }, [isLoggedIn]);

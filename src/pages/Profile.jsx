@@ -10,15 +10,18 @@ import CustomButton from "../components/CustomButton";
 export default function Profile() {
   const user = useSelector((state) => state.user);
   const [objSubmit, setObjSubmit] = useState({});
+  const [email, setEmail] = useState(user.email);
+  const [nama, setNama] = useState(user.nama);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     await axios
-      .put(`users/${user.id}`)
+      .put(`users/${user.ID}`)
       .then((res) => {
-        const { message } = res.data;
+        const { message, data } = res.data;
+        localStorage.setItem("UserData", JSON.stringify(data));
         showNotification({
           title: "Update Successful",
           message: message,
@@ -55,15 +58,21 @@ export default function Profile() {
             id="input-email"
             type="email"
             placeholder="Email"
-            value={user.email}
-            onChange={(e) => handleChange(e.target.value, "email")}
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              handleChange(e.target.value, "email");
+            }}
           />
           <CustomInput
             id="input-name"
             type="text"
             placeholder="Name"
-            value={user.nama}
-            onChange={(e) => handleChange(e.target.value, "first_name")}
+            value={nama}
+            onChange={(e) => {
+              setNama(e.target.value);
+              handleChange(e.target.value, "first_name");
+            }}
           />
           <CustomButton id="btn-update" label="Update" loading={loading} />
         </form>

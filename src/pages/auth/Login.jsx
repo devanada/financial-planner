@@ -37,15 +37,27 @@ export default function Login() {
       .post("login", body)
       .then((res) => {
         const { data } = res;
-        localStorage.setItem("UserData", JSON.stringify(data));
-        dispatch(reduxAction("IS_LOGGED_IN", { isLoggedIn: true, user: data }));
-        showNotification({
-          title: "Login Successful",
-          message: "Hey there! Welcome back to Financial Planner",
-          color: "green",
-          autoClose: 3000,
-        });
-        navigate("/");
+        if (typeof data === "string") {
+          showNotification({
+            title: "Login Failed",
+            message: data,
+            color: "red",
+            autoClose: 3000,
+          });
+        } else {
+          localStorage.setItem("UserData", JSON.stringify(data.data));
+          localStorage.setItem("auth", JSON.stringify(body));
+          dispatch(
+            reduxAction("IS_LOGGED_IN", { isLoggedIn: true, user: data })
+          );
+          showNotification({
+            title: "Login Successful",
+            message: "Hey there! Welcome back to Financial Planner",
+            color: "green",
+            autoClose: 3000,
+          });
+          navigate("/");
+        }
       })
       .catch((err) => {
         const { message } = err.response.data;
@@ -70,12 +82,14 @@ export default function Login() {
             id="input-email"
             type="email"
             placeholder="Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <CustomInput
             id="input-password"
             type="password"
             placeholder="Password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <p className="text-black dark:text-white">
