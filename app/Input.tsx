@@ -17,13 +17,9 @@ export const Input: FC<Props> = ({
 }) => {
   return (
     <div className="relative mb-3">
-      {label && (
-        <label htmlFor={id} className="text-dark-2 dark:text-light">
-          {label}
-        </label>
-      )}
+      {label && <label htmlFor={id}>{label}</label>}
       <input
-        className="mb-1 w-full rounded-xl border border-dark-3 bg-light p-2 text-lg text-dark-2 dark:bg-dark dark:text-light"
+        className="mb-1 w-full rounded-xl border border-dark-3 bg-dark p-2 text-lg disabled:cursor-not-allowed"
         {...(register ? register(name) : {})}
         {...props}
       />
@@ -42,13 +38,9 @@ export const TextArea: FC<Props> = ({
 }) => {
   return (
     <div className="relative mb-3">
-      {label && (
-        <label htmlFor={id} className="text-dark-2 dark:text-light">
-          {label}
-        </label>
-      )}
+      {label && <label htmlFor={id}>{label}</label>}
       <textarea
-        className="mb-1 w-full rounded-xl border border-dark-3 bg-light p-2 text-lg text-dark-2 dark:bg-dark dark:text-light"
+        className="mb-1 w-full rounded-xl border border-dark-3 bg-dark p-2 text-lg"
         id={id}
         {...(register ? register(name) : {})}
         {...props}
